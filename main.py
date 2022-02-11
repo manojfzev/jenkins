@@ -75,7 +75,7 @@ if __name__ == "__main__":
     import google.auth.exceptions
 
     try:
-        default_project_id = "gifted-loader-336417"
+        default_project_id = "citric-cubist-339219"
     except google.auth.exceptions.DefaultCredentialsError:
         print(
             "Please use `gcloud auth application-default login` "
