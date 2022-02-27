@@ -24,7 +24,7 @@ def create_instance(project, zone, name, imagename,subnet):
 
 # [END create_instance]
 
-def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, ciscatscanbenchmark,project, zone, instance_name)):
+def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, ciscatscanbenchmark,project, zone, instance_name):
 
     commands = [
         "sed -i '/session.2.host=/c\session.2.host='"+ciscatscaninstnaceip+" /root/Assessor-CLI/config/sessions.properties",
