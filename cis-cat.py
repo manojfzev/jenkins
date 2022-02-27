@@ -24,7 +24,7 @@ def create_instance(project, zone, name, imagename,subnet):
 
 # [END create_instance]
 
-def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, ciscatscanbenchmark):
+def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, ciscatscanbenchmark,project, zone, instance_name)):
 
     commands = [
         "sed -i '/session.2.host=/c\session.2.host='"+ciscatscaninstnaceip+" /root/Assessor-CLI/config/sessions.properties",
@@ -47,12 +47,20 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
 
     except Exception as e:        
         print("Ciscat scan fail: ", e)
+    finally:
+        delete_instance(project, zone, instance_name)
+
+
+def delete_instance(project, zone, name):
+    instance_delete_command = "gcloud compute instances delete projects/"+project+"/zones/"+zone+"/instances/"+name+" --quiet --format json"
+    instance_delete_output = subprocess.check_output(shlex.split(instance_delete_command))
+    print(name+" is terminated")
         
 def main():
 
     instance_name = create_instance("gifted-loader-336417","us-central1-a","ciscat-client-v2", "ciscat-client-ubuntu-20","default" )
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_20.04_LTS_Benchmark_v1.1.0-xccdf.xml")
+    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_20.04_LTS_Benchmark_v1.1.0-xccdf.xml","gifted-loader-336417", "us-central1-a", "ciscat-client-v2")
 
 main()
