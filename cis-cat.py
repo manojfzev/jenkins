@@ -27,11 +27,11 @@ def create_instance(project, zone, name, imagename,subnet):
 def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, ciscatscanbenchmark):
 
     commands = [
-        "sudo sed -i '/session.2.host=/c\session.2.host='"+ciscatscaninstnaceip+" /root/Assessor-CLI/config/sessions.properties",
-        "sudo sed -i '/session.2.user=/c\session.2.user='"+ciscatscaninstanceuser+" /root/Assessor-CLI/config/sessions.properties",
-        "sudo sed -i '/session.2.identity=/c\session.2.identity='"+ciscatinstancekey+" /root/Assessor-CLI/config/sessions.properties",
-        "sudo sh /root/Assessor-CLI/Assessor-CLI.sh -b /root/Assessor-CLI/benchmarks/"+ciscatscanbenchmark+" > /root/Assessor-CLI/output",
-        "sudo grep Total: /root/Assessor-CLI/output"
+        "sed -i '/session.2.host=/c\session.2.host='"+ciscatscaninstnaceip+" /root/Assessor-CLI/config/sessions.properties",
+        "sed -i '/session.2.user=/c\session.2.user='"+ciscatscaninstanceuser+" /root/Assessor-CLI/config/sessions.properties",
+        "sed -i '/session.2.identity=/c\session.2.identity='"+ciscatinstancekey+" /root/Assessor-CLI/config/sessions.properties",
+        "cd /root/Assessor-CLI && ./Assessor-CLI.sh -b /root/Assessor-CLI/benchmarks/"+ciscatscanbenchmark+" > output",
+        "grep Total: /root/Assessor-CLI/output"
     ]
     try:
         finaloutput=''
