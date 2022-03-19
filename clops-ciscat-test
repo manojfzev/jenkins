@@ -58,9 +58,9 @@ def delete_instance(project, zone, name):
         
 def main():
 
-    instance_name = create_instance("syy-clops-np-c4e6","us-central1-a","ciscat-client-v2", "jenkins-host","projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
+    instance_name = create_instance("syy-clops-np-c4e6","us-central1-a","ciscat-client-v2", "clops-ciscat-client","projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_CentOS_Linux_7_Benchmark_v3.1.2-xccdf.xml","syy-clops-np-c4e6", "us-central1-a", "ciscat-client-v2")
+    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml","syy-clops-np-c4e6", "us-central1-a", "ciscat-client-v2")
 
 main()
