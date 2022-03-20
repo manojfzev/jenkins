@@ -11,6 +11,14 @@ import string
 import googleapiclient.discovery
 import re
 
+def get_random_string():
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(8))
+    # print("Random string of length", length, "is:", result_str)
+    print("Random string of length is:", result_str)
+    return result_str
+
+
 def create_instance(project, zone, name, imagename,subnet):
     
     # oscreateresponse= os.system("gcloud beta compute instances create "+ name +" --project "+ project +" --subnet projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01 --zone us-central1-a --source-machine-image ciscat-host-setupcompleted --no-address"  )
@@ -56,11 +64,29 @@ def delete_instance(project, zone, name):
     instance_delete_output = subprocess.check_output(shlex.split(instance_delete_command))
     print(name+" is terminated")
         
-def main():
+def main(project, image_name, zone, instance_name):
 
-    instance_name = create_instance("syy-clops-np-c4e6","us-central1-a","ciscat-client-v2", "clops-ciscat-client","projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
+    instance_name = create_instance(project,zone,instance_name, image_name,"projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml","syy-clops-np-c4e6", "us-central1-a", "ciscat-client-v2")
+    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml",project, zone, instance_name)
 
-main()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--project_id', help='Your Google Cloud project ID.')
+    parser.add_argument(
+        '--image_name', help='Your Google Cloud machine image name.')
+    parser.add_argument(
+        '--zone',
+        default='us-central1-a',
+        help='Compute Engine zone to deploy to.')
+    # parser.add_argument(
+    #     '--name', default='ciscatinstance'+get_random_string(), help='New instance name.')
+
+    args = parser.parse_args()
+    iname=get_random_string()
+    instance_name="ciscatinstance-"+iname
+
+    main(args.project_id, args.image_name, args.zone, instance_name)
