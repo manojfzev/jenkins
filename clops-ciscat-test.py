@@ -56,7 +56,7 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
     except Exception as e:        
         print("Ciscat scan fail: ", e)
     finally:
-        delete_instance(project, zone, instance_name)
+        #delete_instance(project, zone, instance_name)
 
 
 def delete_instance(project, zone, name):
@@ -64,7 +64,9 @@ def delete_instance(project, zone, name):
     instance_delete_output = subprocess.check_output(shlex.split(instance_delete_command))
     print(name+" is terminated")
         
-def main(project, image_name, zone, instance_name):
+def main(project, image_name, zone, osversion,  instance_name):
+    print("Running os version is ", osversion)
+    ciscatscanbenchmark = get_os(osversion)    
     projectresp=project.rpartition('-')[0]
     projecttype=projectresp.rpartition('-')[2]
     print("selected project is ==> "+ project)
@@ -78,8 +80,8 @@ def main(project, image_name, zone, instance_name):
         subnet="projects/syy-networking-8461/regions/us-central1/subnetworks/snet-prod-us-central1-dynamic-01"
     instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
     print("Waiting for the startup script to be execute")
-    time.sleep(60)    
-    intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml",project, zone, instance_name)
+    #time.sleep(60)    
+    #intiatescan(instance_ip,"ciscat-user",ciscatscanbenchmark,project, zone, instance_name)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -92,11 +94,50 @@ if __name__ == '__main__':
         '--zone',
         default='us-central1-a',
         help='Compute Engine zone to deploy to.')
+    parser.add_argument(
+        '--osversion',        
+        help='OS Version of the machine image.')
     # parser.add_argument(
     #     '--name', default='ciscatinstance'+get_random_string(), help='New instance name.')
 
     args = parser.parse_args()
     iname=get_random_string()
-    instance_name="ciscatinstance-"+iname
+    instance_name="ciscatinstance-"+iname    
 
-    main(args.project_id, args.image_name, args.zone, instance_name)
+    main(args.project_id, args.image_name, args.zone, args.osversion, instance_name)
+
+def get_os(osversion):
+    if osversion in ['Ubuntu_18', 'ubuntu_18', 'Ubuntu_18.04', 'ubuntu_18.04']:
+        print("the os is ubuntu 18")       
+        ciscatscanbenchmark='CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml'
+    elif osversion in ['Ubuntu_20', 'ubuntu_20', 'Ubuntu_20.04', 'ubuntu_20.04']:
+        print("the os is ubuntu 20")        
+        ciscatscanbenchmark='CIS_Ubuntu_Linux_20.04_LTS_Benchmark_v1.1.0-xccdf.xml'
+    elif osversion in ['Ubuntu_16', 'ubuntu_16', 'Ubuntu_16.04', 'ubuntu_16.04']:
+        print("the os is ubuntu 16")        
+        ciscatscanbenchmark='CIS_Ubuntu_Linux_16.04_LTS_Benchmark_v2.0.0-xccdf.xml'    
+    elif osversion in ['RedhatEnterprise', 'redhatenterprise', 'RedhatEnterprise_7', 'redhatenterprise_7']:
+        print("the os is RedhatEnterprise 7")       
+        ciscatscanbenchmark='CIS_Red_Hat_Enterprise_Linux_7_Benchmark_v3.1.1-xccdf.xml'
+    elif osversion in ['RedhatEnterprise_6', 'redhatenterprise_6']:
+        print("the os is RedhatEnterprise_6")        
+        ciscatscanbenchmark='CIS_Red_Hat_Enterprise_Linux_6_Benchmark_v3.0.0-xccdf.xml'
+    elif osversion in ['CentOS_7', 'centos_7', 'CentOS', 'centos','CentOS7', 'centos7']:
+        print("the os is CentOS_7")        
+        ciscatscanbenchmark='CIS_CentOS_Linux_7_Benchmark_v3.1.2-xccdf.xml'
+    elif osversion in ['CentOS_6', 'centos_6', 'CentOS6', 'centos6']:
+        print("the os is CentOS_6")        
+        ciscatscanbenchmark='CIS_CentOS_Linux_6_Benchmark_v3.0.0-xccdf.xml'
+    elif osversion in ['SUSE', 'suse', 'SUSE_12', 'suse_12']:
+        print("the os is suse 12")        
+        ciscatscanbenchmark='CIS_SUSE_Linux_Enterprise_12_Benchmark_v3.0.0-xccdf.xml'
+    elif osversion in ['SUSE_15', 'suse_15']:
+        print("the os is suse 15")       
+        ciscatscanbenchmark='CIS_SUSE_Linux_Enterprise_15_Benchmark_v1.1.0-xccdf.xml'    
+    elif osversion in ['Debian', 'Debian9',]:
+        print("the os is Debian")        
+        ciscatscanbenchmark='CIS_Debian_Linux_9_Benchmark_v1.0.1-xccdf.xml'
+    else:
+        print("please check the instance OSVersion tags is in approved format[Ubuntu_xx.xx , AmazonLinux2, CentOS_x]")
+    return ciscatscanbenchmark
+
