@@ -55,7 +55,7 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
 
     except Exception as e:        
         print("Ciscat scan fail: ", e)
-    finally:
+    #finally:
         #delete_instance(project, zone, instance_name)
 
 
