@@ -139,5 +139,6 @@ def get_os(osversion):
         ciscatscanbenchmark='CIS_Debian_Linux_9_Benchmark_v1.0.1-xccdf.xml'
     else:
         print("please check the instance OSVersion tags is in approved format[Ubuntu_xx.xx , AmazonLinux2, CentOS_x]")
+        sys.exit()
     return ciscatscanbenchmark
 
