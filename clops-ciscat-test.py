@@ -102,7 +102,7 @@ def get_os(osversion):
         sys.exit()
     return ciscatscanbenchmark
 
-def post_data(ciscatscore)    
+def post_data(ciscatscore):  
     payload = {"Total": ciscatscore}
     r = requests.post("https://6qmfyjdek3.execute-api.us-east-1.amazonaws.com/test/test",params=payload)
     print(r.status_code)
