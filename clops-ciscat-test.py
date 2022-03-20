@@ -65,8 +65,18 @@ def delete_instance(project, zone, name):
     print(name+" is terminated")
         
 def main(project, image_name, zone, instance_name):
+    projectresp=project.rpartition('-')[0]
+    projecttype=projectresp.rpartition('-')[2]
+    print("selected project is ==> "+ project)
+    subnet=""
 
-    instance_ip = create_instance(project,zone,instance_name, image_name,"projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
+    if projecttype == "np":
+        print("running on np prod project")
+        subnet= "projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01"
+    else:
+        print("running on prod project")
+        subnet="projects/syy-networking-8461/regions/us-central1/subnetworks/snet-prod-us-central1-dynamic-01"
+    instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
     intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml",project, zone, instance_name)
