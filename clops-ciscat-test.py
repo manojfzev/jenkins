@@ -118,7 +118,7 @@ def main(project, image_name, zone, osversion,  instance_name):
     instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_ip,"ciscat-user",ciscatscanbenchmark,project, zone, instance_name)
+    intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat", ciscatscanbenchmark, project, zone, instance_name)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
