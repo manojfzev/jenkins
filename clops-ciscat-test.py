@@ -66,10 +66,10 @@ def delete_instance(project, zone, name):
         
 def main(project, image_name, zone, instance_name):
 
-    instance_name = create_instance(project,zone,instance_name, image_name,"projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
+    instance_ip = create_instance(project,zone,instance_name, image_name,"projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01" )
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_name,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml",project, zone, instance_name)
+    intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat","CIS_Ubuntu_Linux_18.04_LTS_Benchmark_v2.1.0-xccdf.xml",project, zone, instance_name)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
