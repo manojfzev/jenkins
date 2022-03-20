@@ -55,57 +55,14 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
 
     except Exception as e:        
         print("Ciscat scan fail: ", e)
-    #finally:
-        #delete_instance(project, zone, instance_name)
+    finally:
+        delete_instance(project, zone, instance_name)
 
 
 def delete_instance(project, zone, name):
     instance_delete_command = "gcloud compute instances delete projects/"+project+"/zones/"+zone+"/instances/"+name+" --quiet --format json"
     instance_delete_output = subprocess.check_output(shlex.split(instance_delete_command))
     print(name+" is terminated")
-        
-def main(project, image_name, zone, osversion,  instance_name):
-    print("Running os version is ", osversion)
-    ciscatscanbenchmark = get_os(osversion)
-    print("Benchmark is ",  ciscatscanbenchmark)  
-    projectresp=project.rpartition('-')[0]
-    projecttype=projectresp.rpartition('-')[2]
-    print("selected project is ==> "+ project)
-    subnet=""
-
-    if projecttype == "np":
-        print("running on np prod project")
-        subnet= "projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01"
-    else:
-        print("running on prod project")
-        subnet="projects/syy-networking-8461/regions/us-central1/subnetworks/snet-prod-us-central1-dynamic-01"
-    instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
-    print("Waiting for the startup script to be execute")
-    #time.sleep(60)    
-    #intiatescan(instance_ip,"ciscat-user",ciscatscanbenchmark,project, zone, instance_name)
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--project_id', help='Your Google Cloud project ID.')
-    parser.add_argument(
-        '--image_name', help='Your Google Cloud machine image name.')
-    parser.add_argument(
-        '--zone',
-        default='us-central1-a',
-        help='Compute Engine zone to deploy to.')
-    parser.add_argument(
-        '--osversion',        
-        help='OS Version of the machine image.')
-    # parser.add_argument(
-    #     '--name', default='ciscatinstance'+get_random_string(), help='New instance name.')
-
-    args = parser.parse_args()
-    iname=get_random_string()
-    instance_name="ciscatinstance-"+iname    
-
-    main(args.project_id, args.image_name, args.zone, args.osversion, instance_name)
 
 def get_os(osversion):
     if osversion in ['Ubuntu_18', 'ubuntu_18', 'Ubuntu_18.04', 'ubuntu_18.04']:
@@ -143,3 +100,43 @@ def get_os(osversion):
         sys.exit()
     return ciscatscanbenchmark
 
+def main(project, image_name, zone, osversion,  instance_name):
+    print("Running os version is ", osversion)
+    ciscatscanbenchmark = get_os(osversion)
+    print("Benchmark is ",  ciscatscanbenchmark)  
+    projectresp=project.rpartition('-')[0]
+    projecttype=projectresp.rpartition('-')[2]
+    print("selected project is ==> "+ project)
+    subnet=""
+
+    if projecttype == "np":
+        print("running on np prod project")
+        subnet= "projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01"
+    else:
+        print("running on prod project")
+        subnet="projects/syy-networking-8461/regions/us-central1/subnetworks/snet-prod-us-central1-dynamic-01"
+    instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
+    print("Waiting for the startup script to be execute")
+    time.sleep(60)    
+    intiatescan(instance_ip,"ciscat-user",ciscatscanbenchmark,project, zone, instance_name)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--project_id', help='Your Google Cloud project ID.')
+    parser.add_argument(
+        '--image_name', help='Your Google Cloud machine image name.')
+    parser.add_argument(
+        '--zone',
+        default='us-central1-a',
+        help='Compute Engine zone to deploy to.')
+    parser.add_argument(
+        '--osversion',        
+        help='OS Version of the machine image.') 
+
+    args = parser.parse_args()
+    iname=get_random_string()
+    instance_name="ciscatinstance-"+iname    
+
+    main(args.project_id, args.image_name, args.zone, args.osversion, instance_name)
