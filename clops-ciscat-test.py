@@ -66,7 +66,8 @@ def delete_instance(project, zone, name):
         
 def main(project, image_name, zone, osversion,  instance_name):
     print("Running os version is ", osversion)
-    ciscatscanbenchmark = get_os(osversion)    
+    ciscatscanbenchmark = get_os(osversion)
+    print("Benchmark is ",  ciscatscanbenchmark)  
     projectresp=project.rpartition('-')[0]
     projecttype=projectresp.rpartition('-')[2]
     print("selected project is ==> "+ project)
