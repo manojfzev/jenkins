@@ -10,6 +10,7 @@ import shlex
 import string
 import googleapiclient.discovery
 import re
+import requests
 
 def get_random_string():
     letters = string.ascii_lowercase
@@ -52,6 +53,7 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
             print("scan result are empty")
         else:
             print("Scan results precentage: ", finalscore + "%")
+            return finalscore
 
     except Exception as e:        
         print("Ciscat scan fail: ", e)
@@ -100,6 +102,12 @@ def get_os(osversion):
         sys.exit()
     return ciscatscanbenchmark
 
+def post_data(ciscatscore)    
+    payload = {"Total": ciscatscore}
+    r = requests.post("https://6qmfyjdek3.execute-api.us-east-1.amazonaws.com/test/test",params=payload)
+    print(r.status_code)
+
+
 def main(project, image_name, zone, osversion,  instance_name):
     print("Running os version is ", osversion)
     ciscatscanbenchmark = get_os(osversion)
@@ -118,7 +126,8 @@ def main(project, image_name, zone, osversion,  instance_name):
     instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
     print("Waiting for the startup script to be execute")
     time.sleep(60)    
-    intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat", ciscatscanbenchmark, project, zone, instance_name)
+    ciscatscore = intiatescan(instance_ip,"ciscat-user","/root/Assessor-CLI/ciscat", ciscatscanbenchmark, project, zone, instance_name)
+    post_data(ciscatscore)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
