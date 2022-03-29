@@ -10,7 +10,7 @@ import shlex
 import string
 import googleapiclient.discovery
 import re
-import requests
+#import requests
 import sys
 
 def get_random_string():
