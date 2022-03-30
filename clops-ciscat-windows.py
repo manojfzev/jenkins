@@ -104,10 +104,10 @@ def get_os(osversion):
         sys.exit()
     return ciscatscanbenchmark
 
-# def post_data(ciscatscore):  
-#     payload = {"Total": ciscatscore}
-#     r = requests.post("https://6qmfyjdek3.execute-api.us-east-1.amazonaws.com/test/test",params=payload)
-#     print(r.status_code)
+def post_data(ciscatscore):  
+    payload = {"Total": ciscatscore}
+    r = requests.post("https://6qmfyjdek3.execute-api.us-east-1.amazonaws.com/test/test",params=payload)
+    print(r.status_code)
 
 
 def main(project, image_name, zone, osversion,  instance_name):
@@ -131,7 +131,7 @@ def main(project, image_name, zone, osversion,  instance_name):
     print("instance ip is", instance_ip )
     ciscatscore = intiatescan(instance_ip, ciscatscanbenchmark, project, zone, instance_name)
     print(ciscatscore)
-    #post_data(ciscatscore)
+    post_data(ciscatscore)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
