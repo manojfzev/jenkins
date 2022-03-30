@@ -24,7 +24,7 @@ def get_random_string():
 def create_instance(project, zone, name, imagename,subnet):
 
     print("Parameters are ", project, zone, name, imagename,subnet)
-    instance_create_command = "gcloud beta compute instances create "+ name +" --project "+ project +" --subnet "+ subnet +" --zone " + zone + " --source-machine-image "+ imagename +" --no-address --metadata-from-file=ciscat-client-settings.ps1 --format json"
+    instance_create_command = "gcloud beta compute instances create "+ name +" --project "+ project +" --subnet "+ subnet +" --zone " + zone + " --source-machine-image "+ imagename +" --no-address --metadata-from-file=windows-startup-script-ps1=ciscat-client-settings.ps1  --format json"
     instance_output = subprocess.check_output(shlex.split(instance_create_command), shell = True)
     instance_output_json = json.loads(instance_output)
 
