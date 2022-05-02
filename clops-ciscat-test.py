@@ -62,7 +62,7 @@ def intiatescan(ciscatscaninstnaceip,ciscatscaninstanceuser, ciscatinstancekey, 
 
 
 def delete_instance(project, zone, name):
-    instance_delete_command = "gcloud compute instances delete projects/"+project+"/zones/"+zone+"/instances/"+name+" --quiet --format json"
+    instance_delete_command = "gcloud compute instances delete projects/"+project+"/zones/"+zone+"/instances/"+name+" --delete-disks=all --quiet --format json"
     instance_delete_output = subprocess.check_output(shlex.split(instance_delete_command))
     print(name+" is terminated")
 
