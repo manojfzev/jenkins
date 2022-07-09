@@ -23,7 +23,7 @@ def get_random_string():
 
 def create_instance(project, zone, name, imagename,subnet):
 
-    instance_create_command = "gcloud beta compute instances create "+ name +" --project "+ project +" --subnet "+ subnet +" --zone " + zone + " --source-machine-image "+ imagename +" --no-address --metadata-from-file=windows-startup-script-ps1=ciscat-client-settings.ps1  --format json"
+    instance_create_command = "gcloud beta compute instances create "+ name +" --project "+ project +" --subnet "+ subnet +" --zone " + zone + " --source-machine-image "+ imagename +" --no-address --metadata-from-file=windows-startup-script-ps1=ciscat-client-settings.ps1 --tags technical-clops-patching --format json"
     instance_output = subprocess.check_output(shlex.split(instance_create_command), shell = True)
     instance_output_json = json.loads(instance_output)
 
@@ -119,14 +119,14 @@ def main(project, image_name, zone, osversion,  instance_name):
     subnet=""
 
     if projecttype == "np":
-        print("running on np prod project")
-        subnet= "projects/second-project-339908/regions/us-central1/subnetworks/subnet-a"
+        print("running on np project")
+        subnet= "projects/syy-networking-np-e538/regions/us-central1/subnetworks/snet-nonprod-us-central1-dynamic-01"
     else:
         print("running on prod project")
-        subnet="projects/second-project-339908/regions/us-central1/subnetworks/subnet-a"
+        subnet="projects/syy-networking-8461/regions/us-central1/subnetworks/snet-prod-us-central1-dynamic-01"
     instance_ip = create_instance(project,zone,instance_name, image_name, subnet)
     print("Waiting for the startup script to be execute")
-    time.sleep(60)
+    time.sleep(180)
     print("instance ip is", instance_ip )
     ciscatscore = intiatescan(instance_ip, ciscatscanbenchmark, project, zone, instance_name)
     print(ciscatscore)
